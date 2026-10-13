@@ -1,0 +1,11 @@
+out/
+build/
+*.class
+*.db
+*.db-shm
+*.db-wal
+*.db-journal
+.idea/
+*.iml
+*.log
+*.tmp

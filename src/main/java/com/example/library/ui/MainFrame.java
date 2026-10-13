@@ -1,5 +1,6 @@
 package com.example.library.ui;
 
+import com.example.library.AppInfo;
 import com.example.library.model.Book;
 import com.example.library.model.Loan;
 import com.example.library.model.Member;
@@ -49,7 +50,7 @@ public class MainFrame extends JFrame {
     private int selectedLoanId = -1;
 
     public MainFrame(LibraryService service) {
-        super("سیستم مدیریت کتابخانه");
+        super(AppInfo.TITLE);
         this.service = service;
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1080, 700);
@@ -66,6 +67,11 @@ public class MainFrame extends JFrame {
         tabs.addTab("امانت و بازگشت", buildLoansPanel());
         add(tabs, BorderLayout.CENTER);
 
+        JLabel footer = new JLabel("نسخهٔ شخصی " + AppInfo.OWNER + "  •  اطلاعات روی همین دستگاه ذخیره می‌شود", SwingConstants.CENTER);
+        footer.setBorder(BorderFactory.createEmptyBorder(4, 12, 10, 12));
+        footer.setForeground(new Color(71, 85, 105));
+        add(footer, BorderLayout.SOUTH);
+
         refreshAll();
     }
 
@@ -74,9 +80,11 @@ public class MainFrame extends JFrame {
         header.setBorder(BorderFactory.createEmptyBorder(12, 16, 6, 16));
         header.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 
-        JLabel title = new JLabel("سیستم مدیریت کتابخانه");
+        header.setBackground(new Color(15, 76, 92));
+        JLabel title = new JLabel(AppInfo.TITLE);
         title.setFont(title.getFont().deriveFont(Font.BOLD, 22f));
-        statisticsLabel.setForeground(new Color(75, 85, 99));
+        title.setForeground(Color.WHITE);
+        statisticsLabel.setForeground(new Color(221, 241, 239));
 
         header.add(title, BorderLayout.NORTH);
         header.add(statisticsLabel, BorderLayout.SOUTH);
@@ -266,6 +274,9 @@ public class MainFrame extends JFrame {
     private static JTable createTable(DefaultTableModel model) {
         JTable table = new JTable(model);
         table.setRowHeight(27);
+        table.setSelectionBackground(new Color(204, 236, 232));
+        table.setSelectionForeground(new Color(15, 60, 72));
+        table.setGridColor(new Color(226, 232, 240));
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.setFillsViewportHeight(true);
         table.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);

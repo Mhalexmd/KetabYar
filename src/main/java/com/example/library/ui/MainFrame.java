@@ -5,6 +5,7 @@ import com.example.library.model.Book;
 import com.example.library.model.Loan;
 import com.example.library.model.Member;
 import com.example.library.service.LibraryService;
+import com.example.library.service.PersianSearch;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -289,7 +290,7 @@ public class MainFrame extends JFrame {
             String title = bookTitleField.getText();
             String author = bookAuthorField.getText();
             String isbn = bookIsbnField.getText();
-            int copies = Integer.parseInt(bookCopiesField.getText().trim());
+            int copies = Integer.parseInt(PersianSearch.normalize(bookCopiesField.getText()));
             if (selectedBookId == -1) {
                 service.addBook(title, author, isbn, copies);
                 showMessage("کتاب با موفقیت ثبت شد.");
@@ -397,25 +398,19 @@ public class MainFrame extends JFrame {
     }
 
     private void refreshBooksTable() {
-        String query = bookSearchField.getText().trim().toLowerCase(Locale.ROOT);
         bookModel.setRowCount(0);
-        for (Book book : service.getBooks()) {
-            String searchable = (book.getTitle() + " " + book.getAuthor() + " " + book.getIsbn()).toLowerCase(Locale.ROOT);
-            if (searchable.contains(query)) {
+        selectedBookId = -1;
+        for (Book book : service.searchBooks(bookSearchField.getText())) {
                 bookModel.addRow(new Object[]{book.getId(), book.getTitle(), book.getAuthor(), book.getIsbn(),
                         book.getTotalCopies(), book.getAvailableCopies()});
-            }
         }
     }
 
     private void refreshMembersTable() {
-        String query = memberSearchField.getText().trim().toLowerCase(Locale.ROOT);
         memberModel.setRowCount(0);
-        for (Member member : service.getMembers()) {
-            String searchable = (member.getFullName() + " " + member.getStudentNumber() + " " + member.getPhone()).toLowerCase(Locale.ROOT);
-            if (searchable.contains(query)) {
+        selectedMemberId = -1;
+        for (Member member : service.searchMembers(memberSearchField.getText())) {
                 memberModel.addRow(new Object[]{member.getId(), member.getFullName(), member.getStudentNumber(), member.getPhone()});
-            }
         }
     }
 

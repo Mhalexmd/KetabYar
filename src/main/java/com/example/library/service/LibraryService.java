@@ -34,6 +34,16 @@ public class LibraryService {
     public List<Member> getMembers() { return memberRepository.findAll(); }
     public List<Loan> getLoans() { return loanRepository.findAll(); }
 
+    public List<Book> searchBooks(String query) {
+        return getBooks().stream().filter(book -> PersianSearch.matches(query,
+                book.getTitle(), book.getAuthor(), book.getIsbn())).toList();
+    }
+
+    public List<Member> searchMembers(String query) {
+        return getMembers().stream().filter(member -> PersianSearch.matches(query,
+                member.getFullName(), member.getStudentNumber(), member.getPhone())).toList();
+    }
+
     public Book findBookById(int id) { return bookRepository.findById(id); }
     public Member findMemberById(int id) { return memberRepository.findById(id); }
     public Loan findLoanById(int id) { return loanRepository.findById(id); }

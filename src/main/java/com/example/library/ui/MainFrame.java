@@ -6,6 +6,7 @@ import com.example.library.model.Loan;
 import com.example.library.model.Member;
 import com.example.library.service.LibraryService;
 import com.example.library.service.PersianSearch;
+import com.example.library.service.LoanFilter;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -48,6 +49,7 @@ public class MainFrame extends JFrame {
     private final JTable loanTable = createTable(loanModel);
     private final JComboBox<Book> bookComboBox = new JComboBox<>();
     private final JComboBox<Member> memberComboBox = new JComboBox<>();
+    private final JComboBox<LoanFilter> loanFilter = new JComboBox<>(LoanFilter.values());
     private int selectedLoanId = -1;
 
     public MainFrame(LibraryService service) {
@@ -247,6 +249,9 @@ public class MainFrame extends JFrame {
         JPanel bottom = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         bottom.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         bottom.add(returnButton);
+        bottom.add(new JLabel("نمایش:"));
+        bottom.add(loanFilter);
+        loanFilter.addActionListener(e -> refreshLoansTable());
         panel.add(bottom, BorderLayout.SOUTH);
 
         borrowButton.addActionListener(e -> borrowBook());
@@ -398,8 +403,8 @@ public class MainFrame extends JFrame {
     }
 
     private void refreshBooksTable() {
+        clearBookForm();
         bookModel.setRowCount(0);
-        selectedBookId = -1;
         for (Book book : service.searchBooks(bookSearchField.getText())) {
                 bookModel.addRow(new Object[]{book.getId(), book.getTitle(), book.getAuthor(), book.getIsbn(),
                         book.getTotalCopies(), book.getAvailableCopies()});
@@ -407,16 +412,17 @@ public class MainFrame extends JFrame {
     }
 
     private void refreshMembersTable() {
+        clearMemberForm();
         memberModel.setRowCount(0);
-        selectedMemberId = -1;
         for (Member member : service.searchMembers(memberSearchField.getText())) {
                 memberModel.addRow(new Object[]{member.getId(), member.getFullName(), member.getStudentNumber(), member.getPhone()});
         }
     }
 
     private void refreshLoansTable() {
+        selectedLoanId = -1;
         loanModel.setRowCount(0);
-        List<Loan> allLoans = service.getLoans();
+        List<Loan> allLoans = service.getLoans((LoanFilter) loanFilter.getSelectedItem());
         for (int i = allLoans.size() - 1; i >= 0; i--) {
             Loan loan = allLoans.get(i);
             Book book = service.findBookById(loan.getBookId());

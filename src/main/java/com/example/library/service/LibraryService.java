@@ -34,6 +34,10 @@ public class LibraryService {
     public List<Member> getMembers() { return memberRepository.findAll(); }
     public List<Loan> getLoans() { return loanRepository.findAll(); }
 
+    public List<Loan> getLoans(LoanFilter filter) {
+        return getLoans().stream().filter(filter::matches).toList();
+    }
+
     public List<Book> searchBooks(String query) {
         return getBooks().stream().filter(book -> PersianSearch.matches(query,
                 book.getTitle(), book.getAuthor(), book.getIsbn())).toList();

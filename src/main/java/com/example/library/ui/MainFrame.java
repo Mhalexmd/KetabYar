@@ -1,6 +1,7 @@
 package com.example.library.ui;
 
 import com.example.library.AppInfo;
+import com.example.library.export.CsvExporter;
 import com.example.library.model.Book;
 import com.example.library.model.Loan;
 import com.example.library.model.Member;
@@ -13,6 +14,8 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -129,6 +132,7 @@ public class MainFrame extends JFrame {
         search.add(new JLabel("جستجو در کتاب‌ها:"));
         search.add(bookSearchField);
         search.add(new JLabel("(عنوان، نویسنده یا شابک)"));
+        search.add(exportButton(bookModel, "books.csv"));
 
         top.add(form);
         top.add(actions);
@@ -191,6 +195,7 @@ public class MainFrame extends JFrame {
         search.add(new JLabel("جستجو در اعضا:"));
         search.add(memberSearchField);
         search.add(new JLabel("(نام یا شماره دانشجویی)"));
+        search.add(exportButton(memberModel, "members.csv"));
 
         top.add(form);
         top.add(actions);
@@ -251,6 +256,7 @@ public class MainFrame extends JFrame {
         bottom.add(returnButton);
         bottom.add(new JLabel("نمایش:"));
         bottom.add(loanFilter);
+        bottom.add(exportButton(loanModel, "loans.csv"));
         loanFilter.addActionListener(e -> refreshLoansTable());
         panel.add(bottom, BorderLayout.SOUTH);
 
@@ -269,6 +275,28 @@ public class MainFrame extends JFrame {
         panel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
         panel.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         return panel;
+    }
+
+    private JButton exportButton(DefaultTableModel model, String suggestedName) {
+        JButton button = new JButton("خروجی CSV");
+        button.addActionListener(e -> {
+            JFileChooser chooser = new JFileChooser();
+            chooser.setDialogTitle("ذخیرهٔ ردیف‌های نمایش‌داده‌شده");
+            chooser.setSelectedFile(new java.io.File(suggestedName));
+            if (chooser.showSaveDialog(this) != JFileChooser.APPROVE_OPTION) return;
+            Path file = chooser.getSelectedFile().toPath();
+            if (!file.getFileName().toString().toLowerCase(Locale.ROOT).endsWith(".csv")) {
+                file = file.resolveSibling(file.getFileName() + ".csv");
+            }
+            if (java.nio.file.Files.exists(file) && !confirm("فایل وجود دارد؛ جایگزین شود؟")) return;
+            try {
+                CsvExporter.write(model, file);
+                showMessage("خروجی ذخیره شد:\n" + file.toAbsolutePath());
+            } catch (IOException ex) {
+                showError("ذخیرهٔ خروجی ناموفق بود: " + ex.getMessage());
+            }
+        });
+        return button;
     }
 
     private static DefaultTableModel createTableModel(String... headers) {

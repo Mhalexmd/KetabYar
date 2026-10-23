@@ -49,7 +49,7 @@ public final class SqliteBookRepository implements BookRepository {
 
     @Override
     public boolean existsByIsbn(String isbn, int excludeBookId) {
-        String sql = "SELECT COUNT(*) FROM books WHERE isbn = ? AND id <> ?";
+        String sql = "SELECT COUNT(*) FROM books WHERE isbn = ? COLLATE NOCASE AND id <> ?";
         try (PreparedStatement statement = database.prepare(sql)) {
             statement.setString(1, isbn);
             statement.setInt(2, excludeBookId);

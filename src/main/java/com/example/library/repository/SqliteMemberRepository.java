@@ -49,7 +49,7 @@ public final class SqliteMemberRepository implements MemberRepository {
 
     @Override
     public boolean existsByStudentNumber(String studentNumber, int excludeMemberId) {
-        String sql = "SELECT COUNT(*) FROM members WHERE student_number = ? AND id <> ?";
+        String sql = "SELECT COUNT(*) FROM members WHERE student_number = ? COLLATE NOCASE AND id <> ?";
         try (PreparedStatement statement = database.prepare(sql)) {
             statement.setString(1, studentNumber);
             statement.setInt(2, excludeMemberId);

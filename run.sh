@@ -12,6 +12,6 @@ case "$mode" in
   build) echo 'SoftwareEngineeing compiled successfully.' ;;
   test)
     find src/test/java -name '*.java' -print0 | xargs -0 javac --release 17 -encoding UTF-8 -cp 'out:lib/*' -d out
-    java -Djava.awt.headless=true -cp 'out:lib/*' com.example.library.LibraryIntegrationTest ;;
+    java -Djava.awt.headless=true -cp 'out:lib/*' com.example.library.LibraryIntegrationTest "$@" ;;
   *) echo 'Usage: bash run.sh [desktop|api|build|test] [database] [port]'; exit 1 ;;
 esac

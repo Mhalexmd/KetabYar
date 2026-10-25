@@ -1,6 +1,7 @@
 param(
     [ValidateSet('desktop', 'api', 'test', 'build')][string]$Mode = 'desktop',
     [string]$Database = 'library.db',
+    [switch]$CoreOnly,
     [ValidateRange(1, 65535)][int]$Port = 8080
 )
 $ErrorActionPreference = 'Stop'
@@ -32,7 +33,9 @@ try {
             $tests = @(Get-ChildItem src/test/java -Filter *.java -Recurse | ForEach-Object { $_.FullName })
             & $compiler --release 17 -encoding UTF-8 -cp 'out;lib/*' -d out @tests
             if ($LASTEXITCODE -ne 0) { throw 'Test compilation failed.' }
-            & $runtime -Djava.awt.headless=true -cp 'out;lib/*' com.example.library.LibraryIntegrationTest
+            $testArgs = @()
+            if ($CoreOnly) { $testArgs += '--core-only' }
+            & $runtime '-Djava.awt.headless=true' -cp 'out;lib/*' com.example.library.LibraryIntegrationTest @testArgs
         }
     }
     if ($LASTEXITCODE -ne 0) { throw "Java exited with code $LASTEXITCODE." }

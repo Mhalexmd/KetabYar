@@ -190,7 +190,12 @@ public final class LibraryApiServer implements AutoCloseable {
         try {
             if (segments.length == 3 && "GET".equals(method)) {
                 List<Map<String, Object>> result = new ArrayList<>();
-                LoanFilter filter = LoanFilter.valueOf(queryParameter(exchange, "status", "all").toUpperCase(Locale.ROOT));
+                LoanFilter filter;
+                try {
+                    filter = LoanFilter.valueOf(queryParameter(exchange, "status", "all").toUpperCase(Locale.ROOT));
+                } catch (IllegalArgumentException ex) {
+                    throw new IllegalArgumentException("وضعیت باید یکی از all، active، overdue یا returned باشد.");
+                }
                 for (Loan loan : service.getLoans(filter)) result.add(loanJson(loan));
                 sendJson(exchange, 200, result);
                 return;

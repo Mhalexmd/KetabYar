@@ -10,3 +10,16 @@ build/
 *.log
 *.tmp
 .local-backups/
+
+# Local environment files (keep a shareable example if added)
+.env
+.env.*
+!.env.example
+
+# Editor and operating system files
+.vscode/
+.DS_Store
+Thumbs.db
+Desktop.ini
+hs_err_pid*.log
+replay_pid*.log

@@ -40,7 +40,7 @@ public final class ApiMain {
         }, "library-api-shutdown"));
 
         apiServer.start();
-        System.out.println("Library REST API is running at http://127.0.0.1:" + apiServer.getPort());
+        System.out.println("Ketabyar REST API is running at http://127.0.0.1:" + apiServer.getPort());
         System.out.println("Health check: GET http://127.0.0.1:" + apiServer.getPort() + "/api/health");
         System.out.println("Using SQLite database: " + Path.of(databasePath).toAbsolutePath());
         System.out.println("Press Ctrl+C to stop the API.");

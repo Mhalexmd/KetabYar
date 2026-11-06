@@ -9,7 +9,7 @@ if [ "$#" -gt 0 ]; then shift; fi
 case "$mode" in
   desktop) java -cp 'out:lib/*' com.example.library.Main "$@" ;;
   api) java -cp 'out:lib/*' com.example.library.ApiMain "$@" ;;
-  build) echo 'SoftwareEngineeing compiled successfully.' ;;
+  build) echo 'Ketabyar compiled successfully.' ;;
   test)
     find src/test/java -name '*.java' -print0 | xargs -0 javac --release 17 -encoding UTF-8 -cp 'out:lib/*' -d out
     java -Djava.awt.headless=true -cp 'out:lib/*' com.example.library.LibraryIntegrationTest "$@" ;;

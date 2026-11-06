@@ -24,7 +24,7 @@ public final class LibraryIntegrationTest {
     private static HttpClient client;
 
     public static void main(String[] args) throws Exception {
-        Path folder = Files.createTempDirectory("softwareengineering-test-");
+        Path folder = Files.createTempDirectory("ketabyar-test-");
         Path file = folder.resolve("test.db");
         try {
             check(PersianSearch.matches("كيوان ۱۲۳", "کیوان", "123"), "Arabic spelling and Persian digits");

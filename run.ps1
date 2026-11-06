@@ -26,7 +26,7 @@ try {
     & $compiler --release 17 -encoding UTF-8 -cp 'lib/*' -d out @sources
     if ($LASTEXITCODE -ne 0) { throw 'Java compilation failed.' }
     switch ($Mode) {
-        'build' { Write-Host 'SoftwareEngineeing compiled successfully.' }
+        'build' { Write-Host 'Ketabyar compiled successfully.' }
         'api' { & $runtime -cp 'out;lib/*' com.example.library.ApiMain $Database $Port }
         'desktop' { & $runtime -cp 'out;lib/*' com.example.library.Main $Database }
         'test' {
